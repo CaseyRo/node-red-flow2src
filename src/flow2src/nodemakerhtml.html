@@ -49,6 +49,7 @@ options:
 subflows.
 * Output Folder - By default the folder is named 'src'; you can specify a different path relative to your project's flow
 file.
+* Subflow Folder - Optional folder for subflows; defaults to Output Folder when left blank.
 
 Lastly, you can invoke the "Flow-to-Src" button automatically using the checkbox for "Automatiaclly Flow-to-Src on
 Deploys".
@@ -60,7 +61,8 @@ Deploys".
         color: '{{node_color}}',
         defaults: {
             name: {value:""},
-            {{{defaults}}}
+            {{{defaults}}},
+            subflowFolder: {value:""}
         },
         inputs: {{numinputs}},
         outputs: {{numoutputs}},
@@ -75,7 +77,7 @@ Deploys".
             {{{oneditprepare}}}
             var node = this;
             $('#btn_flow2src').click(function(){
-                doAjax({"action":'flow2src', "srcFolder": node.srcFolder}, node.id, function(res){
+                doAjax({"action":'flow2src', "srcFolder": node.srcFolder, "subflowFolder": node.subflowFolder}, node.id, function(res){
                     $('#node-dialog-ok').click();
                     let notice = RED.notify('Flow source properties written to "./' + node.srcFolder + '" folder.', {
                         type: "success",
@@ -84,7 +86,7 @@ Deploys".
                 });
             });
             $('#btn_src2flow').click(function(){
-                doAjax({"action":'src2flow', "srcFolder": node.srcFolder}, node.id, function(res) {
+                doAjax({"action":'src2flow', "srcFolder": node.srcFolder, "subflowFolder": node.subflowFolder}, node.id, function(res) {
                     reloadFlows(function() {
                         $('#node-dialog-ok').click();
                     });
