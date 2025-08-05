@@ -222,12 +222,12 @@ module.exports = function(RED) {
                             // Create the src path
                             let sFPath = sF.file.delRightMost('/');
                             if (!fs.existsSync(sFPath)) {
-                                fs.mkdirSync(sFPath, { recursive: true });
+                                fs.mkdirSync(sFPath, { recursive: true, mode: 0o775 });
                             }
 
                             // Write the given file
                             if (obj[sF.property] != '') {
-                                fs.writeFileSync(sF.file, obj[sF.property]);
+                                fs.writeFileSync(sF.file, obj[sF.property], { mode: 0o664 });
                                 sF.file = sF.file.delLeftMost(path + '/');
                                 manifest.push(sF);
                             }
@@ -235,8 +235,8 @@ module.exports = function(RED) {
                     });
 
                     // Write the manifest to the src folder
-                    fs.mkdirSync(path, { recursive: true });
-                    fs.writeFileSync(path + '/manifest.json', JSON.stringify(manifest, null, 4));
+                    fs.mkdirSync(path, { recursive: true, mode: 0o775 });
+                    fs.writeFileSync(path + '/manifest.json', JSON.stringify(manifest, null, 4), { mode: 0o664 });
                     node.status({ fill: "green", shape: "dot", text: "updated files" });
                     setTimeout(function() {
                         node.status({});
@@ -265,7 +265,7 @@ module.exports = function(RED) {
                     });
 
                     // Update the flow file
-                    fs.writeFileSync(flowFile, JSON.stringify(ff, null, 4));
+                    fs.writeFileSync(flowFile, JSON.stringify(ff, null, 4), { mode: 0o664 });
                 } catch(e) {
                     node.error(e);
                 }
