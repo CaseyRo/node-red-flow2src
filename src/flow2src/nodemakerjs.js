@@ -225,9 +225,9 @@ module.exports = function(RED) {
                     if (subflowPath !== flowPath) {
                         fs.rmSync(subflowPath, { recursive: true, force: true });
                     }
-                    fs.mkdirSync(flowPath, { recursive: true, mode: 0o775 });
+                    fs.mkdirSync(flowPath, { recursive: true, mode: 0o777 });
                     if (subflowPath !== flowPath) {
-                        fs.mkdirSync(subflowPath, { recursive: true, mode: 0o775 });
+                        fs.mkdirSync(subflowPath, { recursive: true, mode: 0o777 });
                     }
 
                     // Write the nodes to the src folder and record the manifest
@@ -238,12 +238,12 @@ module.exports = function(RED) {
                             // Create the src path
                             let sFPath = sF.file.delRightMost('/');
                             if (!fs.existsSync(sFPath)) {
-                                fs.mkdirSync(sFPath, { recursive: true, mode: 0o775 });
+                                fs.mkdirSync(sFPath, { recursive: true, mode: 0o777 });
                             }
 
                             // Write the given file
                             if (obj[sF.property] != '') {
-                                fs.writeFileSync(sF.file, obj[sF.property], { mode: 0o664 });
+                                fs.writeFileSync(sF.file, obj[sF.property], { mode: 0o666 });
                                 let base = sF.subflow ? subflowPath : flowPath;
                                 sF.file = sF.file.delLeftMost(base + '/');
                                 manifest.push(sF);
@@ -252,8 +252,8 @@ module.exports = function(RED) {
                     });
 
                     // Write the manifest to the src folder
-                    fs.mkdirSync(flowPath, { recursive: true, mode: 0o775 });
-                    fs.writeFileSync(flowPath + '/manifest.json', JSON.stringify(manifest, null, 4), { mode: 0o664 });
+                    fs.mkdirSync(flowPath, { recursive: true, mode: 0o777 });
+                    fs.writeFileSync(flowPath + '/manifest.json', JSON.stringify(manifest, null, 4), { mode: 0o666 });
                     node.status({ fill: "green", shape: "dot", text: "updated files" });
                     setTimeout(function() {
                         node.status({});
@@ -283,7 +283,7 @@ module.exports = function(RED) {
                     });
 
                     // Update the flow file
-                    fs.writeFileSync(flowFile, JSON.stringify(ff, null, 4), { mode: 0o664 });
+                    fs.writeFileSync(flowFile, JSON.stringify(ff, null, 4), { mode: 0o666 });
                 } catch(e) {
                     node.error(e);
                 }
